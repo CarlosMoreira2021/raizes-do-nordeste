@@ -1,13 +1,187 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+// Perfis de acesso do sistema
+enum PerfilUsuario {
+  CLIENTE
+  ATENDENTE
+  COZINHA
+  GERENTE
+  ADMIN
+}
+
+// Canais de origem do pedido
+enum CanalPedido {
+  APP
+  TOTEM
+  BALCAO
+  PICKUP
+  WEB
+}
+
+// Status do pedido
+enum StatusPedido {
+  AGUARDANDO_PAGAMENTO
+  PAGAMENTO_APROVADO
+  EM_PREPARO
+  PRONTO
+  ENTREGUE
+  CANCELADO
+}
+
+// Status do pagamento
+enum StatusPagamento {
+  PENDENTE
+  APROVADO
+  RECUSADO
+}
+
+// Usuários do sistema
+model Usuario {
+  id        Int           @id @default(autoincrement())
+  nome      String
+  email     String        @unique
+  senha     String
+  perfil    PerfilUsuario @default(CLIENTE)
+  ativo     Boolean       @default(true)
+  criadoEm  DateTime      @default(now())
+
+  pedidos     Pedido[]
+  fidelidade  Fidelidade?
+
+  @@map("usuarios")
+}
+
+// Unidades da rede
+model Unidade {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  endereco  String
+  cidade    String
+  ativo     Boolean  @default(true)
+  criadoEm DateTime @default(now())
+
+  estoques  Estoque[]
+  pedidos   Pedido[]
+
+  @@map("unidades")
+}
+
+// Produtos do cardápio
+model Produto {
+  id          Int      @id @default(autoincrement())
+  nome        String
+  descricao   String?
+  preco       Decimal  @db.Decimal(10, 2)
+  categoria   String
+  ativo       Boolean  @default(true)
+  criadoEm   DateTime @default(now())
+
+  estoques    Estoque[]
+  itensPedido ItemPedido[]
+
+  @@map("produtos")
+}
+
+// Estoque por unidade
+model Estoque {
+  id         Int      @id @default(autoincrement())
+  quantidade Int      @default(0)
+  criadoEm  DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  unidade    Unidade  @relation(fields: [unidadeId], references: [id])
+  unidadeId  Int
+
+  produto    Produto  @relation(fields: [produtoId], references: [id])
+  produtoId  Int
+
+  @@unique([unidadeId, produtoId])
+  @@map("estoques")
+}
+
+// Pedidos
+model Pedido {
+  id           Int          @id @default(autoincrement())
+  status       StatusPedido @default(AGUARDANDO_PAGAMENTO)
+  canalPedido  CanalPedido
+  total        Decimal      @db.Decimal(10, 2)
+  criadoEm    DateTime     @default(now())
+  atualizadoEm DateTime    @updatedAt
+
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId  Int
+
+  unidade    Unidade  @relation(fields: [unidadeId], references: [id])
+  unidadeId  Int
+
+  itens      ItemPedido[]
+  pagamento  Pagamento?
+
+  @@map("pedidos")
+}
+
+// Itens do pedido
+model ItemPedido {
+  id             Int     @id @default(autoincrement())
+  quantidade     Int
+  precoUnitario  Decimal @db.Decimal(10, 2)
+
+  pedido     Pedido  @relation(fields: [pedidoId], references: [id])
+  pedidoId   Int
+
+  produto    Produto @relation(fields: [produtoId], references: [id])
+  produtoId  Int
+
+  @@map("itens_pedido")
+}
+
+// Pagamentos
+model Pagamento {
+  id             Int            @id @default(autoincrement())
+  status         StatusPagamento @default(PENDENTE)
+  formaPagamento String
+  valor          Decimal        @db.Decimal(10, 2)
+  respostaMock   Json?
+  criadoEm      DateTime       @default(now())
+  atualizadoEm  DateTime       @updatedAt
+
+  pedido     Pedido @relation(fields: [pedidoId], references: [id])
+  pedidoId   Int    @unique
+
+  @@map("pagamentos")
+}
+
+// Programa de fidelidade
+model Fidelidade {
+  id        Int      @id @default(autoincrement())
+  pontos    Int      @default(0)
+  criadoEm DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  usuario    Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId  Int     @unique
+
+  historico  HistoricoFidelidade[]
+
+  @@map("fidelidade")
+}
+
+// Histórico de pontos
+model HistoricoFidelidade {
+  id        Int      @id @default(autoincrement())
+  pontos    Int
+  tipo      String   // GANHO ou RESGATE
+  descricao String
+  criadoEm DateTime @default(now())
+
+  fidelidade   Fidelidade @relation(fields: [fidelidadeId], references: [id])
+  fidelidadeId Int
+
+  @@map("historico_fidelidade")
 }

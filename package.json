@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "dev": "ts-node src/servidor.ts",
-  "build": "tsc",
-  "start": "node dist/servidor.js"
-},
+    "dev": "ts-node src/servidor.ts",
+    "build": "tsc",
+    "start": "node dist/servidor.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.5.0",
     "@prisma/client": "^7.5.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",

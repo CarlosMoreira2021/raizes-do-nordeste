@@ -12,7 +12,7 @@
         "exec": [
           "if (pm.collectionVariables.get('token') === undefined || pm.collectionVariables.get('token') === '') {",
           "  pm.sendRequest({",
-          "    url: 'http://localhost:3000/auth/login',",
+          "    url: 'https://raizes-do-nordeste-production.up.railway.app/auth/login',",
           "    method: 'POST',",
           "    header: {'Content-Type': 'application/json'},",
           "    body: {",
@@ -32,6 +32,10 @@
     {
       "key": "token",
       "value": ""
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://raizes-do-nordeste-production.up.railway.app"
     }
   ],
   "item": [
@@ -59,7 +63,7 @@
               "mode": "raw",
               "raw": "{\n  \"email\": \"admin@raizes.com\",\n  \"senha\": \"Admin@123\"\n}"
             },
-            "url": {"raw": "http://localhost:3000/auth/login", "host": ["localhost"], "port": "3000", "path": ["auth", "login"]}
+            "url": {"raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"]}
           }
         },
         {
@@ -71,7 +75,7 @@
               "mode": "raw",
               "raw": "{\n  \"email\": \"admin@raizes.com\",\n  \"senha\": \"senhaerrada\"\n}"
             },
-            "url": {"raw": "http://localhost:3000/auth/login", "host": ["localhost"], "port": "3000", "path": ["auth", "login"]}
+            "url": {"raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"]}
           }
         },
         {
@@ -83,7 +87,7 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Teste Usuario\",\n  \"email\": \"teste3@raizes.com\",\n  \"senha\": \"Teste@123\"\n}"
             },
-            "url": {"raw": "http://localhost:3000/auth/registrar", "host": ["localhost"], "port": "3000", "path": ["auth", "registrar"]}
+            "url": {"raw": "{{baseUrl}}/auth/registrar", "host": ["{{baseUrl}}"], "path": ["auth", "registrar"]}
           }
         }
       ]
@@ -96,7 +100,7 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": {"raw": "http://localhost:3000/pedidos", "host": ["localhost"], "port": "3000", "path": ["pedidos"]}
+            "url": {"raw": "{{baseUrl}}/pedidos", "host": ["{{baseUrl}}"], "path": ["pedidos"]}
           }
         },
         {
@@ -104,7 +108,7 @@
           "request": {
             "method": "GET",
             "header": [{"key": "Authorization", "value": "Bearer tokeninvalido123"}],
-            "url": {"raw": "http://localhost:3000/pedidos", "host": ["localhost"], "port": "3000", "path": ["pedidos"]}
+            "url": {"raw": "{{baseUrl}}/pedidos", "host": ["{{baseUrl}}"], "path": ["pedidos"]}
           }
         }
       ]
@@ -124,7 +128,7 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Raízes do Nordeste - Shopping\",\n  \"endereco\": \"Av. Principal, 456\",\n  \"cidade\": \"Fortaleza\"\n}"
             },
-            "url": {"raw": "http://localhost:3000/unidades", "host": ["localhost"], "port": "3000", "path": ["unidades"]}
+            "url": {"raw": "{{baseUrl}}/unidades", "host": ["{{baseUrl}}"], "path": ["unidades"]}
           }
         },
         {
@@ -132,7 +136,7 @@
           "request": {
             "method": "GET",
             "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-            "url": {"raw": "http://localhost:3000/unidades", "host": ["localhost"], "port": "3000", "path": ["unidades"]}
+            "url": {"raw": "{{baseUrl}}/unidades", "host": ["{{baseUrl}}"], "path": ["unidades"]}
           }
         }
       ]
@@ -145,7 +149,7 @@
           "request": {
             "method": "GET",
             "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-            "url": {"raw": "http://localhost:3000/produtos?page=1&limit=10", "host": ["localhost"], "port": "3000", "path": ["produtos"], "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "10"}]}
+            "url": {"raw": "{{baseUrl}}/produtos?page=1&limit=10", "host": ["{{baseUrl}}"], "path": ["produtos"], "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "10"}]}
           }
         },
         {
@@ -160,7 +164,7 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Tapioca Nordestina\",\n  \"descricao\": \"Tapioca com queijo coalho\",\n  \"preco\": 18.90,\n  \"categoria\": \"Lanches\"\n}"
             },
-            "url": {"raw": "http://localhost:3000/produtos", "host": ["localhost"], "port": "3000", "path": ["produtos"]}
+            "url": {"raw": "{{baseUrl}}/produtos", "host": ["{{baseUrl}}"], "path": ["produtos"]}
           }
         },
         {
@@ -175,7 +179,7 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"X-Nordestino\",\n  \"descricao\": \"Produto duplicado\",\n  \"preco\": 32.90,\n  \"categoria\": \"Lanches\"\n}"
             },
-            "url": {"raw": "http://localhost:3000/produtos", "host": ["localhost"], "port": "3000", "path": ["produtos"]}
+            "url": {"raw": "{{baseUrl}}/produtos", "host": ["{{baseUrl}}"], "path": ["produtos"]}
           }
         }
       ]
@@ -195,7 +199,7 @@
               "mode": "raw",
               "raw": "{\n  \"unidadeId\": 1,\n  \"produtoId\": 1,\n  \"quantidade\": 10,\n  \"tipo\": \"ENTRADA\"\n}"
             },
-            "url": {"raw": "http://localhost:3000/estoque/movimentar", "host": ["localhost"], "port": "3000", "path": ["estoque", "movimentar"]}
+            "url": {"raw": "{{baseUrl}}/estoque/movimentar", "host": ["{{baseUrl}}"], "path": ["estoque", "movimentar"]}
           }
         },
         {
@@ -203,7 +207,7 @@
           "request": {
             "method": "GET",
             "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-            "url": {"raw": "http://localhost:3000/estoque/unidade/1", "host": ["localhost"], "port": "3000", "path": ["estoque", "unidade", "1"]}
+            "url": {"raw": "{{baseUrl}}/estoque/unidade/1", "host": ["{{baseUrl}}"], "path": ["estoque", "unidade", "1"]}
           }
         }
       ]
@@ -223,7 +227,7 @@
               "mode": "raw",
               "raw": "{\n  \"unidadeId\": 1,\n  \"canalPedido\": \"APP\",\n  \"itens\": [\n    {\"produtoId\": 1, \"quantidade\": 1}\n  ]\n}"
             },
-            "url": {"raw": "http://localhost:3000/pedidos", "host": ["localhost"], "port": "3000", "path": ["pedidos"]}
+            "url": {"raw": "{{baseUrl}}/pedidos", "host": ["{{baseUrl}}"], "path": ["pedidos"]}
           }
         },
         {
@@ -238,7 +242,7 @@
               "mode": "raw",
               "raw": "{\n  \"unidadeId\": 1,\n  \"canalPedido\": \"INVALIDO\",\n  \"itens\": [\n    {\"produtoId\": 1, \"quantidade\": 1}\n  ]\n}"
             },
-            "url": {"raw": "http://localhost:3000/pedidos", "host": ["localhost"], "port": "3000", "path": ["pedidos"]}
+            "url": {"raw": "{{baseUrl}}/pedidos", "host": ["{{baseUrl}}"], "path": ["pedidos"]}
           }
         },
         {
@@ -246,7 +250,7 @@
           "request": {
             "method": "GET",
             "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-            "url": {"raw": "http://localhost:3000/pedidos?canalPedido=APP", "host": ["localhost"], "port": "3000", "path": ["pedidos"], "query": [{"key": "canalPedido", "value": "APP"}]}
+            "url": {"raw": "{{baseUrl}}/pedidos?canalPedido=APP", "host": ["{{baseUrl}}"], "path": ["pedidos"], "query": [{"key": "canalPedido", "value": "APP"}]}
           }
         },
         {
@@ -261,7 +265,7 @@
               "mode": "raw",
               "raw": "{\n  \"status\": \"EM_PREPARO\"\n}"
             },
-            "url": {"raw": "http://localhost:3000/pedidos/1/status", "host": ["localhost"], "port": "3000", "path": ["pedidos", "1", "status"]}
+            "url": {"raw": "{{baseUrl}}/pedidos/1/status", "host": ["{{baseUrl}}"], "path": ["pedidos", "1", "status"]}
           }
         }
       ]
@@ -279,9 +283,9 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"pedidoId\": 3,\n  \"formaPagamento\": \"PIX\"\n}"
+              "raw": "{\n  \"pedidoId\": 1,\n  \"formaPagamento\": \"PIX\"\n}"
             },
-            "url": {"raw": "http://localhost:3000/pagamentos/processar", "host": ["localhost"], "port": "3000", "path": ["pagamentos", "processar"]}
+            "url": {"raw": "{{baseUrl}}/pagamentos/processar", "host": ["{{baseUrl}}"], "path": ["pagamentos", "processar"]}
           }
         },
         {
@@ -296,7 +300,7 @@
               "mode": "raw",
               "raw": "{\n  \"pedidoId\": 9999,\n  \"formaPagamento\": \"PIX\"\n}"
             },
-            "url": {"raw": "http://localhost:3000/pagamentos/processar", "host": ["localhost"], "port": "3000", "path": ["pagamentos", "processar"]}
+            "url": {"raw": "{{baseUrl}}/pagamentos/processar", "host": ["{{baseUrl}}"], "path": ["pagamentos", "processar"]}
           }
         }
       ]
@@ -309,7 +313,7 @@
           "request": {
             "method": "GET",
             "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-            "url": {"raw": "http://localhost:3000/fidelidade/meu-saldo", "host": ["localhost"], "port": "3000", "path": ["fidelidade", "meu-saldo"]}
+            "url": {"raw": "{{baseUrl}}/fidelidade/meu-saldo", "host": ["{{baseUrl}}"], "path": ["fidelidade", "meu-saldo"]}
           }
         },
         {
@@ -324,7 +328,7 @@
               "mode": "raw",
               "raw": "{\n  \"pontos\": 99999\n}"
             },
-            "url": {"raw": "http://localhost:3000/fidelidade/resgatar", "host": ["localhost"], "port": "3000", "path": ["fidelidade", "resgatar"]}
+            "url": {"raw": "{{baseUrl}}/fidelidade/resgatar", "host": ["{{baseUrl}}"], "path": ["fidelidade", "resgatar"]}
           }
         }
       ]
@@ -337,7 +341,7 @@
           "request": {
             "method": "GET",
             "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-            "url": {"raw": "http://localhost:3000/promocoes", "host": ["localhost"], "port": "3000", "path": ["promocoes"]}
+            "url": {"raw": "{{baseUrl}}/promocoes", "host": ["{{baseUrl}}"], "path": ["promocoes"]}
           }
         },
         {
@@ -352,7 +356,7 @@
               "mode": "raw",
               "raw": "{\n  \"itens\": [\n    {\"produtoId\": 1, \"quantidade\": 3, \"precoUnitario\": 32.90, \"categoria\": \"Lanches\"},\n    {\"produtoId\": 3, \"quantidade\": 1, \"precoUnitario\": 12.90, \"categoria\": \"Bebidas\"}\n  ],\n  \"totalOriginal\": 111.60,\n  \"pontosFidelidade\": 120\n}"
             },
-            "url": {"raw": "http://localhost:3000/promocoes/simular", "host": ["localhost"], "port": "3000", "path": ["promocoes", "simular"]}
+            "url": {"raw": "{{baseUrl}}/promocoes/simular", "host": ["{{baseUrl}}"], "path": ["promocoes", "simular"]}
           }
         }
       ]

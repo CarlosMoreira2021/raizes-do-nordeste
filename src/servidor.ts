@@ -5,6 +5,8 @@ import autenticacaoRotas from './rotas/autenticacaoRotas'
 import unidadeRotas from './rotas/unidadeRotas'
 import produtoRotas from './rotas/produtoRotas'
 import estoqueRotas from './rotas/estoqueRotas'
+import pedidoRotas from './rotas/pedidoRotas'
+import pagamentoRotas from './rotas/pagamentoRotas'
 
 const aplicacao = express()
 
@@ -16,6 +18,8 @@ aplicacao.use('/auth', autenticacaoRotas)
 aplicacao.use('/unidades', unidadeRotas)
 aplicacao.use('/produtos', produtoRotas)
 aplicacao.use('/estoque', estoqueRotas)
+aplicacao.use('/pedidos', pedidoRotas)
+aplicacao.use('/pagamentos', pagamentoRotas)
 
 aplicacao.get('/saude', (requisicao, resposta) => {
   resposta.json({

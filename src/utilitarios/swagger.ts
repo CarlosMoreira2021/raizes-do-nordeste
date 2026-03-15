@@ -31,7 +31,8 @@ const opcoes = {
       { name: 'Estoque', description: 'Controle de estoque por unidade' },
       { name: 'Pedidos', description: 'Gestão de pedidos' },
       { name: 'Pagamentos', description: 'Processamento de pagamentos mock' },
-      { name: 'Fidelidade', description: 'Programa de fidelidade' }
+      { name: 'Fidelidade', description: 'Programa de fidelidade' },
+      { name: 'Promoções', description: 'Gestão de promoções e campanhas' }
     ],
     paths: {
       '/saude': {
@@ -131,6 +132,46 @@ const opcoes = {
           }
         }
       },
+      '/unidades/{id}': {
+        get: {
+          tags: ['Unidades'],
+          summary: 'Buscar unidade por ID',
+          parameters: [
+            { name: 'id', in: 'path', required: true, schema: { type: 'integer' } }
+          ],
+          responses: {
+            '200': { description: 'Unidade encontrada' },
+            '404': { description: 'Unidade não encontrada' }
+          }
+        },
+        patch: {
+          tags: ['Unidades'],
+          summary: 'Atualizar unidade (ADMIN/GERENTE)',
+          parameters: [
+            { name: 'id', in: 'path', required: true, schema: { type: 'integer' } }
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    nome: { type: 'string' },
+                    endereco: { type: 'string' },
+                    cidade: { type: 'string' },
+                    ativo: { type: 'boolean' }
+                  }
+                }
+              }
+            }
+          },
+          responses: {
+            '200': { description: 'Unidade atualizada' },
+            '404': { description: 'Unidade não encontrada' }
+          }
+        }
+      },
       '/produtos': {
         get: {
           tags: ['Produtos'],
@@ -166,6 +207,29 @@ const opcoes = {
           responses: {
             '201': { description: 'Produto criado' },
             '409': { description: 'Produto já existe' }
+          }
+        }
+      },
+      '/produtos/{id}': {
+        get: {
+          tags: ['Produtos'],
+          summary: 'Buscar produto por ID',
+          parameters: [
+            { name: 'id', in: 'path', required: true, schema: { type: 'integer' } }
+          ],
+          responses: {
+            '200': { description: 'Produto encontrado' },
+            '404': { description: 'Produto não encontrado' }
+          }
+        },
+        patch: {
+          tags: ['Produtos'],
+          summary: 'Atualizar produto (ADMIN/GERENTE)',
+          parameters: [
+            { name: 'id', in: 'path', required: true, schema: { type: 'integer' } }
+          ],
+          responses: {
+            '200': { description: 'Produto atualizado' }
           }
         }
       },
@@ -247,7 +311,7 @@ const opcoes = {
           tags: ['Pedidos'],
           summary: 'Listar pedidos com filtros',
           parameters: [
-            { name: 'canalPedido', in: 'query', schema: { type: 'string' } },
+            { name: 'canalPedido', in: 'query', schema: { type: 'string', enum: ['APP', 'TOTEM', 'BALCAO', 'PICKUP', 'WEB'] } },
             { name: 'status', in: 'query', schema: { type: 'string' } },
             { name: 'page', in: 'query', schema: { type: 'integer' } },
             { name: 'limit', in: 'query', schema: { type: 'integer' } }
@@ -257,10 +321,23 @@ const opcoes = {
           }
         }
       },
+      '/pedidos/{id}': {
+        get: {
+          tags: ['Pedidos'],
+          summary: 'Buscar pedido por ID',
+          parameters: [
+            { name: 'id', in: 'path', required: true, schema: { type: 'integer' } }
+          ],
+          responses: {
+            '200': { description: 'Pedido encontrado' },
+            '404': { description: 'Pedido não encontrado' }
+          }
+        }
+      },
       '/pedidos/{id}/status': {
         patch: {
           tags: ['Pedidos'],
-          summary: 'Atualizar status do pedido',
+          summary: 'Atualizar status do pedido (ADMIN/GERENTE/COZINHA/ATENDENTE)',
           parameters: [
             { name: 'id', in: 'path', required: true, schema: { type: 'integer' } }
           ],
@@ -307,10 +384,23 @@ const opcoes = {
           }
         }
       },
+      '/pagamentos/pedido/{pedidoId}': {
+        get: {
+          tags: ['Pagamentos'],
+          summary: 'Buscar pagamento por pedido',
+          parameters: [
+            { name: 'pedidoId', in: 'path', required: true, schema: { type: 'integer' } }
+          ],
+          responses: {
+            '200': { description: 'Pagamento encontrado' },
+            '404': { description: 'Pagamento não encontrado' }
+          }
+        }
+      },
       '/fidelidade/meu-saldo': {
         get: {
           tags: ['Fidelidade'],
-          summary: 'Consultar saldo de pontos',
+          summary: 'Consultar saldo de pontos do usuário autenticado',
           responses: {
             '200': { description: 'Saldo e histórico de pontos' }
           }
@@ -319,7 +409,7 @@ const opcoes = {
       '/fidelidade/resgatar': {
         post: {
           tags: ['Fidelidade'],
-          summary: 'Resgatar pontos',
+          summary: 'Resgatar pontos de fidelidade',
           requestBody: {
             required: true,
             content: {
@@ -336,6 +426,51 @@ const opcoes = {
           responses: {
             '200': { description: 'Pontos resgatados' },
             '409': { description: 'Pontos insuficientes' }
+          }
+        }
+      },
+      '/promocoes': {
+        get: {
+          tags: ['Promoções'],
+          summary: 'Listar promoções ativas',
+          responses: {
+            '200': { description: 'Lista de promoções' }
+          }
+        }
+      },
+      '/promocoes/simular': {
+        post: {
+          tags: ['Promoções'],
+          summary: 'Simular desconto em um pedido',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['itens', 'totalOriginal'],
+                  properties: {
+                    itens: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          produtoId: { type: 'integer', example: 1 },
+                          quantidade: { type: 'integer', example: 3 },
+                          precoUnitario: { type: 'number', example: 32.90 },
+                          categoria: { type: 'string', example: 'Lanches' }
+                        }
+                      }
+                    },
+                    totalOriginal: { type: 'number', example: 111.60 },
+                    pontosFidelidade: { type: 'integer', example: 120 }
+                  }
+                }
+              }
+            }
+          },
+          responses: {
+            '200': { description: 'Simulação de desconto realizada' }
           }
         }
       }

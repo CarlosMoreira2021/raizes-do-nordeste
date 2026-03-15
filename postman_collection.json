@@ -81,7 +81,7 @@
             "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Teste Usuario\",\n  \"email\": \"teste2@raizes.com\",\n  \"senha\": \"Teste@123\"\n}"
+              "raw": "{\n  \"nome\": \"Teste Usuario\",\n  \"email\": \"teste3@raizes.com\",\n  \"senha\": \"Teste@123\"\n}"
             },
             "url": {"raw": "http://localhost:3000/auth/registrar", "host": ["localhost"], "port": "3000", "path": ["auth", "registrar"]}
           }
@@ -325,6 +325,34 @@
               "raw": "{\n  \"pontos\": 99999\n}"
             },
             "url": {"raw": "http://localhost:3000/fidelidade/resgatar", "host": ["localhost"], "port": "3000", "path": ["fidelidade", "resgatar"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Promocoes",
+      "item": [
+        {
+          "name": "T21 - Listar promoções ativas",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "http://localhost:3000/promocoes", "host": ["localhost"], "port": "3000", "path": ["promocoes"]}
+          }
+        },
+        {
+          "name": "T22 - Simular desconto no pedido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itens\": [\n    {\"produtoId\": 1, \"quantidade\": 3, \"precoUnitario\": 32.90, \"categoria\": \"Lanches\"},\n    {\"produtoId\": 3, \"quantidade\": 1, \"precoUnitario\": 12.90, \"categoria\": \"Bebidas\"}\n  ],\n  \"totalOriginal\": 111.60,\n  \"pontosFidelidade\": 120\n}"
+            },
+            "url": {"raw": "http://localhost:3000/promocoes/simular", "host": ["localhost"], "port": "3000", "path": ["promocoes", "simular"]}
           }
         }
       ]

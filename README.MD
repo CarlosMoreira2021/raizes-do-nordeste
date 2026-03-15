@@ -109,11 +109,11 @@ A coleção de testes está disponível no arquivo `postman_collection.json` na 
 3. Selecione o arquivo `postman_collection.json`
 
 **Passo 2 — Executar os testes:**
-1. Execute o **T01 - Login válido** primeiro — ele salva o token automaticamente na coleção
+1. Execute o **T01 - Login válido** primeiro — ele salva o token automaticamente
 2. Execute os demais testes na ordem:
-   - Auth → Erros de Autenticacao → Unidades → Produtos → Estoque → Pedidos → Pagamentos → Fidelidade
+   - Auth → Erros de Autenticacao → Unidades → Produtos → Estoque → Pedidos → Pagamentos → Fidelidade → Promocoes
 
-### Cenários cobertos (20 testes):
+### Cenários cobertos (22 testes):
 
 | ID | Cenário | Tipo | Status Esperado |
 |----|---------|------|----------------|
@@ -137,6 +137,8 @@ A coleção de testes está disponível no arquivo `postman_collection.json` na 
 | T18 | Pedido inexistente | Negativo | 404 |
 | T19 | Consultar saldo pontos | Positivo | 200 |
 | T20 | Resgatar pontos insuficientes | Negativo | 409 |
+| T21 | Listar promoções ativas | Positivo | 200 |
+| T22 | Simular desconto no pedido | Positivo | 200 |
 
 ---
 
@@ -145,12 +147,13 @@ A coleção de testes está disponível no arquivo `postman_collection.json` na 
 | Módulo | Endpoints | Descrição |
 |--------|-----------|-----------|
 | Auth | POST /auth/registrar, POST /auth/login | Autenticação JWT |
-| Unidades | GET/POST /unidades | Gestão de unidades da rede |
-| Produtos | GET/POST /produtos | Cardápio com paginação |
+| Unidades | GET/POST/PATCH /unidades | Gestão de unidades da rede |
+| Produtos | GET/POST/PATCH /produtos | Cardápio com paginação |
 | Estoque | GET/POST /estoque | Controle por unidade |
 | Pedidos | GET/POST /pedidos, PATCH /pedidos/:id/status | Fluxo completo com canalPedido |
 | Pagamentos | POST /pagamentos/processar | Mock de pagamento |
 | Fidelidade | GET/POST /fidelidade | Pontos e resgate |
+| Promoções | GET /promocoes, POST /promocoes/simular | Campanhas e descontos |
 
 ---
 
@@ -174,7 +177,12 @@ src/
 ├── repositorios/     # Acesso ao banco de dados
 ├── middlewares/      # Autenticação e autorização
 ├── rotas/            # Definição dos endpoints
-└── utilitarios/      # JWT, Prisma client, Swagger
+└── utilitarios/      # JWT, Prisma client, Swagger, Logger
+prisma/
+├── schema.prisma     # Modelo do banco de dados
+├── migrations/       # Histórico de migrations
+└── seed.ts           # Dados iniciais
+logs/                 # Logs de auditoria (gerado automaticamente)
 ```
 
 ---
@@ -185,6 +193,17 @@ Cliente cria pedido → Valida estoque → Cria pedido (status: AGUARDANDO_PAGAM
 → Processa pagamento mock → Aprovado: status PAGAMENTO_APROVADO + pontos fidelidade
                           → Recusado: status CANCELADO
 ```
+
+---
+
+## 🔒 Segurança e LGPD
+
+- Senhas armazenadas com hash bcrypt
+- Autenticação via JWT com expiração de 24h
+- Autorização por perfil em todos os endpoints sensíveis
+- Dados pessoais coletados: nome, email (finalidade: autenticação e fidelização)
+- Logs de auditoria para ações sensíveis: criação de pedidos, pagamentos e mudanças de status
+- Respostas da API não expõem dados sensíveis como senha
 
 ---
 

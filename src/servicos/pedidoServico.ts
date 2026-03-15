@@ -1,7 +1,7 @@
 import { criarPedido, buscarPedidoPorId, listarPedidos, atualizarStatusPedido } from '../repositorios/pedidoRepositorio'
 import { buscarProdutoPorId } from '../repositorios/produtoRepositorio'
 import { verificarDisponibilidade, movimentarEstoque } from './estoqueServico'
-import clientePrisma from '../utilitarios/clientePrisma'
+import { auditoria } from '../utilitarios/logger'
 
 const CANAIS_VALIDOS = ['APP', 'TOTEM', 'BALCAO', 'PICKUP', 'WEB']
 const STATUS_VALIDOS = ['AGUARDANDO_PAGAMENTO', 'PAGAMENTO_APROVADO', 'EM_PREPARO', 'PRONTO', 'ENTREGUE', 'CANCELADO']
@@ -12,12 +12,10 @@ export const realizarPedido = async (dados: {
   canalPedido: string
   itens: { produtoId: number; quantidade: number }[]
 }) => {
-  // Valida canal do pedido
   if (!CANAIS_VALIDOS.includes(dados.canalPedido)) {
     throw { codigo: 422, mensagem: `Canal inválido. Use: ${CANAIS_VALIDOS.join(', ')}` }
   }
 
-  // Valida itens e calcula total
   const itensComPreco = []
   let total = 0
 
@@ -27,7 +25,6 @@ export const realizarPedido = async (dados: {
       throw { codigo: 404, mensagem: `Produto ${item.produtoId} não encontrado.` }
     }
 
-    // Verifica estoque disponível
     await verificarDisponibilidade(dados.unidadeId, item.produtoId, item.quantidade)
 
     const precoUnitario = Number(produto.preco)
@@ -40,7 +37,6 @@ export const realizarPedido = async (dados: {
     })
   }
 
-  // Cria o pedido
   const pedido = await criarPedido({
     usuarioId: dados.usuarioId,
     unidadeId: dados.unidadeId,
@@ -49,10 +45,17 @@ export const realizarPedido = async (dados: {
     itens: itensComPreco
   })
 
-  // Decrementa estoque
   for (const item of itensComPreco) {
     await movimentarEstoque(dados.unidadeId, item.produtoId, item.quantidade, 'SAIDA')
   }
+
+  // Log de auditoria
+  auditoria('PEDIDO_CRIADO', dados.usuarioId, {
+    pedidoId: pedido.id,
+    canalPedido: dados.canalPedido,
+    total,
+    unidadeId: dados.unidadeId
+  })
 
   return pedido
 }
@@ -73,11 +76,19 @@ export const obterPedidos = async (filtros: {
   return await listarPedidos(filtros)
 }
 
-export const atualizarStatus = async (id: number, status: string) => {
+export const atualizarStatus = async (id: number, status: string, usuarioId: number) => {
   if (!STATUS_VALIDOS.includes(status)) {
     throw { codigo: 422, mensagem: `Status inválido. Use: ${STATUS_VALIDOS.join(', ')}` }
   }
 
   await obterPedidoPorId(id)
-  return await atualizarStatusPedido(id, status)
+  const pedido = await atualizarStatusPedido(id, status)
+
+  // Log de auditoria
+  auditoria('STATUS_PEDIDO_ATUALIZADO', usuarioId, {
+    pedidoId: id,
+    novoStatus: status
+  })
+
+  return pedido
 }

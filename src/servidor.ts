@@ -10,6 +10,7 @@ import estoqueRotas from './rotas/estoqueRotas'
 import pedidoRotas from './rotas/pedidoRotas'
 import pagamentoRotas from './rotas/pagamentoRotas'
 import fidelidadeRotas from './rotas/fidelidadeRotas'
+import promocaoRotas from './rotas/promocaoRotas'
 
 const aplicacao = express()
 
@@ -17,10 +18,8 @@ aplicacao.use(cors())
 aplicacao.use(express.json())
 aplicacao.use(express.urlencoded({ extended: true }))
 
-// Swagger
 aplicacao.use('/documentacao', swaggerUi.serve, swaggerUi.setup(especificacaoSwagger))
 
-// Rotas
 aplicacao.use('/auth', autenticacaoRotas)
 aplicacao.use('/unidades', unidadeRotas)
 aplicacao.use('/produtos', produtoRotas)
@@ -28,6 +27,7 @@ aplicacao.use('/estoque', estoqueRotas)
 aplicacao.use('/pedidos', pedidoRotas)
 aplicacao.use('/pagamentos', pagamentoRotas)
 aplicacao.use('/fidelidade', fidelidadeRotas)
+aplicacao.use('/promocoes', promocaoRotas)
 
 aplicacao.get('/saude', (requisicao, resposta) => {
   resposta.json({

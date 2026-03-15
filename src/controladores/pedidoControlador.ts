@@ -74,6 +74,7 @@ export const atualizarStatusPedido = async (req: Request, res: Response): Promis
   try {
     const id = Number(req.params.id)
     const { status } = req.body
+    const usuarioId = req.usuarioAutenticado!.id
 
     if (!status) {
       res.status(400).json({
@@ -86,7 +87,7 @@ export const atualizarStatusPedido = async (req: Request, res: Response): Promis
       return
     }
 
-    const pedido = await atualizarStatus(id, status)
+    const pedido = await atualizarStatus(id, status, usuarioId)
     res.status(200).json(pedido)
   } catch (erro: any) {
     res.status(erro.codigo || 500).json({

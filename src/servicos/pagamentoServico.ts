@@ -1,6 +1,7 @@
 import clientePrisma from '../utilitarios/clientePrisma'
 import { atualizarStatusPedido } from '../repositorios/pedidoRepositorio'
 import { buscarPedidoPorId } from '../repositorios/pedidoRepositorio'
+import { auditoria } from '../utilitarios/logger'
 
 export const processarPagamentoMock = async (dados: {
   pedidoId: number
@@ -16,9 +17,7 @@ export const processarPagamentoMock = async (dados: {
     throw { codigo: 409, mensagem: 'Pedido não está aguardando pagamento.' }
   }
 
-  // Simulação do gateway de pagamento
-  // Em produção, aqui chamaria a API real do gateway
-  const aprovado = Math.random() > 0.2 // 80% de chance de aprovação
+  const aprovado = Math.random() > 0.2
 
   const respostaMock = {
     gateway: 'MOCK_GATEWAY',
@@ -29,7 +28,6 @@ export const processarPagamentoMock = async (dados: {
     processadoEm: new Date().toISOString()
   }
 
-  // Salva o pagamento
   const pagamento = await clientePrisma.pagamento.create({
     data: {
       pedidoId: dados.pedidoId,
@@ -40,11 +38,18 @@ export const processarPagamentoMock = async (dados: {
     }
   })
 
-  // Atualiza status do pedido baseado no resultado
   const novoStatus = aprovado ? 'PAGAMENTO_APROVADO' : 'CANCELADO'
   await atualizarStatusPedido(dados.pedidoId, novoStatus)
 
-  // Se aprovado, adiciona pontos de fidelidade
+  // Log de auditoria
+  auditoria('PAGAMENTO_PROCESSADO', pedido.usuarioId, {
+    pedidoId: dados.pedidoId,
+    status: aprovado ? 'APROVADO' : 'RECUSADO',
+    valor: pedido.total,
+    formaPagamento: dados.formaPagamento,
+    transacaoId: respostaMock.transacaoId
+  })
+
   if (aprovado) {
     const pontos = Math.floor(Number(pedido.total))
     await clientePrisma.fidelidade.upsert({

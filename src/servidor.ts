@@ -7,6 +7,7 @@ import produtoRotas from './rotas/produtoRotas'
 import estoqueRotas from './rotas/estoqueRotas'
 import pedidoRotas from './rotas/pedidoRotas'
 import pagamentoRotas from './rotas/pagamentoRotas'
+import fidelidadeRotas from './rotas/fidelidadeRotas'
 
 const aplicacao = express()
 
@@ -20,6 +21,7 @@ aplicacao.use('/produtos', produtoRotas)
 aplicacao.use('/estoque', estoqueRotas)
 aplicacao.use('/pedidos', pedidoRotas)
 aplicacao.use('/pagamentos', pagamentoRotas)
+aplicacao.use('/fidelidade', fidelidadeRotas)
 
 aplicacao.get('/saude', (requisicao, resposta) => {
   resposta.json({

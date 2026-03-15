@@ -9,11 +9,15 @@ const opcoes = {
       description: 'API REST para gerenciamento da rede de lanchonetes Raízes do Nordeste',
     },
     servers: [
-      {
-        url: 'http://localhost:3000',
-        description: 'Servidor local'
-      }
-    ],
+  {
+    url: 'https://raizes-do-nordeste-production.up.railway.app',
+    description: 'Servidor de produção'
+  },
+  {
+    url: 'http://localhost:3000',
+    description: 'Servidor local'
+  }
+],
     components: {
       securitySchemes: {
         bearerAuth: {

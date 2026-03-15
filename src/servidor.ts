@@ -1,17 +1,18 @@
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
 import autenticacaoRotas from './rotas/autenticacaoRotas'
-
-dotenv.config()
+import unidadeRotas from './rotas/unidadeRotas'
 
 const aplicacao = express()
 
 aplicacao.use(cors())
 aplicacao.use(express.json())
+aplicacao.use(express.urlencoded({ extended: true }))
 
 // Rotas
 aplicacao.use('/auth', autenticacaoRotas)
+aplicacao.use('/unidades', unidadeRotas)
 
 // Rota de saúde
 aplicacao.get('/saude', (requisicao, resposta) => {

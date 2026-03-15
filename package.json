@@ -1,12 +1,13 @@
 {
   "name": "raizes-do-nordeste",
   "version": "1.0.0",
-  "description": "",
+  "description": "API REST para gerenciamento da rede de lanchonetes Raízes do Nordeste",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node --transpile-only src/servidor.ts",
     "build": "tsc",
-    "start": "node dist/servidor.js"
+    "start": "node dist/servidor.js",
+    "seed": "ts-node --transpile-only prisma/seed.ts"
   },
   "keywords": [],
   "author": "",

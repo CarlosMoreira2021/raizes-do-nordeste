@@ -63,35 +63,41 @@ DATABASE_URL="postgresql://postgres:SUA_SENHA@localhost:5432/raizes_do_nordeste?
 JWT_SEGREDO="raizes_nordeste_segredo_super_secreto"
 JWT_EXPIRACAO="24h"
 PORTA=3000
-
-
-exemplo: "postgresql://postgres:admin123@localhost:5432/raizes_do_nordeste?schema=public"
 ```
+
+> Exemplo: `"postgresql://postgres:admin123@localhost:5432/raizes_do_nordeste?schema=public"`
 
 ---
 
 ## 🗄️ Banco de dados
 
-1. Crie o banco no PostgreSQL:
+### Passo 1 — Criar o banco de dados
+
+Escolha uma das opções abaixo:
+
+**Opção A — Via terminal:**
 ```bash
 psql -U postgres -c "CREATE DATABASE raizes_do_nordeste;"
-ou
-"C:\Program Files\PostgreSQL\17\bin\psql" -U postgres -c "CREATE DATABASE raizes_do_nordeste;"
-> Se instalou outra versão, troque o `17` pela versão instalada (ex: `16`, `15`)
 ```
 
-2. Execute as migrations:
+**Opção B — Caminho completo (Windows, se psql não for reconhecido):**
+```bash
+"C:\Program Files\PostgreSQL\17\bin\psql" -U postgres -c "CREATE DATABASE raizes_do_nordeste;"
+```
+> Se instalou outra versão, troque o `17` pela versão instalada (ex: `16`, `15`)
+
+**Opção C — Via pgAdmin 4 (sem terminal):**
+1. Abra o **pgAdmin 4**
+2. No painel esquerdo, expanda **Servers → PostgreSQL**
+3. Clique com botão direito em **Databases**
+4. Clique em **Create → Database**
+5. No campo **Database**, digite: `raizes_do_nordeste`
+6. Clique em **Save**
+
+### Passo 2 — Rodar as migrations e seed
 ```bash
 npx prisma migrate dev
-```
-
-3. Gere o cliente Prisma:
-```bash
 npx prisma generate
-```
-
-4. Execute o seed para popular o banco com dados iniciais:
-```bash
 npm run seed
 ```
 

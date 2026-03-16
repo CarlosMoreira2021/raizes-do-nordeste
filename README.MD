@@ -4,6 +4,17 @@ API REST para gerenciamento da rede de lanchonetes **Raízes do Nordeste**, dese
 
 ---
 
+## 🌐 Deploy
+
+A API está disponível em produção:
+
+- **API:** https://raizes-do-nordeste-production.up.railway.app
+- **Swagger:** https://raizes-do-nordeste-production.up.railway.app/documentacao
+- **Saúde:** https://raizes-do-nordeste-production.up.railway.app/saude
+- **Repositório:** https://github.com/CarlosMoreira2021/raizes-do-nordeste
+
+---
+
 ## 🛠️ Tecnologias utilizadas
 
 - **Node.js** + **TypeScript**
@@ -21,6 +32,7 @@ API REST para gerenciamento da rede de lanchonetes **Raízes do Nordeste**, dese
 - **Postman** — testes e documentação dos endpoints
 - **pgAdmin 4** — interface visual do banco de dados
 - **Git/GitHub** — controle de versão
+- **Railway** — plataforma de deploy
 
 ---
 
@@ -90,7 +102,12 @@ Servidor rodando em: `http://localhost:3000`
 
 ## 📚 Documentação
 
-Acesse o Swagger em:
+Swagger disponível em produção:
+```
+https://raizes-do-nordeste-production.up.railway.app/documentacao
+```
+
+Ou localmente:
 ```
 http://localhost:3000/documentacao
 ```
@@ -100,6 +117,10 @@ http://localhost:3000/documentacao
 ## 🧪 Testes
 
 A coleção de testes está disponível no arquivo `postman_collection.json` na raiz do repositório.
+
+### Credenciais para teste:
+- **Admin:** admin@raizes.com / Admin@123
+- **Cliente:** cliente@raizes.com / Cliente@123
 
 ### Como executar os testes:
 

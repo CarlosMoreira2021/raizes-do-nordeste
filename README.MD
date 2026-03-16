@@ -63,6 +63,9 @@ DATABASE_URL="postgresql://postgres:SUA_SENHA@localhost:5432/raizes_do_nordeste?
 JWT_SEGREDO="raizes_nordeste_segredo_super_secreto"
 JWT_EXPIRACAO="24h"
 PORTA=3000
+
+
+exemplo: "postgresql://postgres:admin123@localhost:5432/raizes_do_nordeste?schema=public"
 ```
 
 ---
@@ -72,6 +75,9 @@ PORTA=3000
 1. Crie o banco no PostgreSQL:
 ```bash
 psql -U postgres -c "CREATE DATABASE raizes_do_nordeste;"
+ou
+"C:\Program Files\PostgreSQL\17\bin\psql" -U postgres -c "CREATE DATABASE raizes_do_nordeste;"
+> Se instalou outra versão, troque o `17` pela versão instalada (ex: `16`, `15`)
 ```
 
 2. Execute as migrations:
